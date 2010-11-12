@@ -70,19 +70,24 @@ class AdminProcess
 	   if($_POST['cteacher'] == "") {
 		   $form->setError("cteacher", "*");
 	   }
-	   if(!isset($_POST['cday'])) {
+	   if($_POST['desc'] == "") {
+			$form->setError("desc", "*");
+	   }
+	   if(!isset($_POST['cm']) && !isset($_POST['ct']) && !isset($_POST['cw']) && !isset($_POST['cr']) && !isset($_POST['cf']) ) {
 		   $form->setError("cday", "*");
 	   }
-	   if(!isset($_POST['lday'])) {
-		   $form->setError("lday", "*");
+	   if(isset($_POST['ln']) && (isset($_POST['lm']) || isset($_POST['lt']) || isset($_POST['lw']) || isset($_POST['lr']) || isset($_POST['lf']))) {
+			$form->setError("lday", "*");
 	   }
-	   if(strcmp($_POST['s_hour'].$_POST['s_min'],$_POST['e_hour'].$_POST['e_min']) >= 0) {
+	   if((int)$_POST['s_hour'].$_POST['s_min'] >= (int)$_POST['e_hour'].$_POST['e_min']) {
 		   $form->setError("stime", "*");
 	   }
-	   if(strcmp($_POST['ls_hour'].$_POST['ls_min'],$_POST['le_hour'].$_POST['le_min']) >= 0) {
-		   $form->setError("ltime", "*");
+	   if(!isset($_POST['ln'])) {
+		   if((int)$_POST['ls_hour'].$_POST['ls_min'] >= (int)$_POST['le_hour'].$_POST['le_min']) {
+			   $form->setError("ltime", "*");
+		   }
 	   }
-	   if(!preg_match('/^[A-Za-z]{4}[0-9]{3}$/', $_POST['cname'])){
+	   if(!preg_match('/[A-Za-z]{4}[0-9]{3}/', $_POST['cnumber'])){
 			$form->setError("cnumber", "*");
 	   }
 	   if($form->num_errors > 0){
@@ -94,8 +99,8 @@ class AdminProcess
 	   //Check if class is in database;
 	   $number = $_POST['cnumber'];
 	   $section = $_POST['csection'];
-	   $q = "SELECT * FROM courses WHERE Number='$number' AND Section='$section'";
-	   $database->query($q);
+	   //$q = "SELECT * FROM courses WHERE Number='$number' AND Section='$section'";
+	   //$database->query($q);
 
    }
 

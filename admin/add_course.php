@@ -4,6 +4,45 @@ include("../include/session.php");
 if(!$session->isAdmin()) {
 	header("Location: ../login.php");
 }
+
+function displayHours($where) {
+	global $form;
+for($i = 8;$i < 13;$i++) {
+	if($form->value("$where") != $i) 
+		echo "<option value=\"".$i."\">".$i."</option>\n";
+	else
+		echo "<option value=\"".$i."\" selected=\"selected\">".$i."</option>\n";
+}
+for($i = 1;$i < 8;$i++) {
+	if($form->value("$where") != ($i+12))
+		echo "<option value=\"".($i+12)."\">".$i."</option>\n";
+	else
+		echo "<option value=\"".($i+12)."\" selected=\"selected\">".$i."</option>\n";
+}
+}
+
+function displayMinutes($where) {
+	global $form;
+	for($i = 0;$i < 60;$i+=5) {
+	if($i < 10){
+		if($form->value("$where") != $i) {
+			echo "<option value=\"".$i."\">0".$i."</option>\n";
+		}
+		else {
+			echo "<option value=\"".$i."\" selected=\"selected\">0".$i."</option>\n";
+		}
+	} else {
+		if($form->value("$where") != $i) {
+			echo "<option value=\"".$i."\">".$i."</option>\n";
+		}
+		else {
+			echo "<option value=\"".$i."\" selected=\"selected\">".$i."</option>\n";
+		}
+
+	}
+}
+}
+
 ?>
 <html>
 <head>
@@ -39,148 +78,78 @@ if($form->num_errors > 0) {
 <tr><td><? echo $form->error("cteacher");?>Teacher:</td><td<input type="text" name="cteacher" value="<?echo $form->value('cteacher')?>"/></td></tr>
 <tr><td colspan=2><hr></td></tr>
 <tr><td><? echo $form->error("cday");?>Class Day(s):</td><td>
-M<input type="checkbox" name="cday[]" value="M"/>
-T<input type="checkbox" name="cday[]" value="T"/>
-W<input type="checkbox" name="cday[]" value="W"/>
-R<input type="checkbox" name="cday[]" value="R"/>
-F<input type="checkbox" name="cday[]" value="F"/></td></tr>
+M<input type="checkbox" name="cm" value="M"<?if($form->value('cm') == "M") echo "checked=\"yes\"";?>/>
+T<input type="checkbox" name="ct" value="T"<?if($form->value('ct') == "T") echo "checked=\"yes\"";?>/>
+W<input type="checkbox" name="cw" value="W"<?if($form->value('cw') == "W") echo "checked=\"yes\"";?>/>
+R<input type="checkbox" name="cr" value="R"<?if($form->value('cr') == "R") echo "checked=\"yes\"";?>/>
+F<input type="checkbox" name="cf" value="F"<?if($form->value('cf') == "F") echo "checked=\"yes\"";?>/></td></tr>
 <tr><td>Start Time:</td><td>
 <select name="s_hour">
-<option value="8">8</option>
-<option value="9">9</option>
-<option value="10">10</option>
-<option value="11">11</option>
-<option value="12">12</option>
-<option value="13">1</option>
-<option value="14">2</option>
-<option value="15">3</option>
-<option value="16">4</option>
-<option value="17">5</option>
-<option value="18">6</option>
-<option value="19">7</option>
+<?
+displayHours('s_hour');
+?>
 </select>
 <select name="s_min">
-<option value="00">00</option>
-<option value="05">05</option>
-<option value="10">10</option>
-<option value="15">15</option>
-<option value="20">20</option>
-<option value="25">25</option>
-<option value="30">30</option>
-<option value="35">35</option>
-<option value="40">40</option>
-<option value="45">45</option>
-<option value="50">50</option>
-<option value="55">55</option>
+<?
+displayMinutes('s_min');
+?>
 </select>
 </td></tr>
 <tr><td><? echo $form->error("stime"); ?>End Time:</td><td>
 <select name="e_hour">
-<option value="8">8</option>
-<option value="9">9</option>
-<option value="10">10</option>
-<option value="11">11</option>
-<option value="12">12</option>
-<option value="13">1</option>
-<option value="14">2</option>
-<option value="15">3</option>
-<option value="16">4</option>
-<option value="17">5</option>
-<option value="18">6</option>
-<option value="19">7</option>
+<?
+displayHours('e_hour');
+?>
 </select>
 <select name="e_min">
-<option value="00">00</option>
-<option value="05">05</option>
-<option value="10">10</option>
-<option value="15">15</option>
-<option value="20">20</option>
-<option value="25">25</option>
-<option value="30">30</option>
-<option value="35">35</option>
-<option value="40">40</option>
-<option value="45">45</option>
-<option value="50">50</option>
-<option value="55">55</option>
+<?
+displayMinutes('e_min');
+?>
 </select>
 </td></tr>
 <tr><td></td></tr>
 <tr><td><? echo $form->error("lday"); ?>Lab Day(s):</td><td>
-M<input type="checkbox" name="lday[]" value="M"/>
-T<input type="checkbox" name="lday[]" value="T"/>
-W<input type="checkbox" name="lday[]" value="W"/>
-R<input type="checkbox" name="lday[]" value="R"/>
-F<input type="checkbox" name="lday[]" value="F"/>
-None<input type="checkbox" name="lday[]" value="N"/></td></tr>
+M<input type="checkbox" name="lm" value="M"<?if($form->value('lm') == "M") echo "checked=\"yes\"";?>/>
+T<input type="checkbox" name="lt" value="T"<?if($form->value('lt') == "T") echo "checked=\"yes\"";?>/>
+W<input type="checkbox" name="lw" value="W"<?if($form->value('lw') == "W") echo "checked=\"yes\"";?>/>
+R<input type="checkbox" name="lr" value="R"<?if($form->value('lr') == "R") echo "checked=\"yes\"";?>/>
+F<input type="checkbox" name="lf" value="F"<?if($form->value('lf') == "F") echo "checked=\"yes\"";?>/>
+None<input type="checkbox" name="ln" value="N"<?if($form->value('ln') == "N") echo "checked=\"yes\"";?>/></td></tr>
 <tr><td>Start Time:</td><td>
 <select name="ls_hour">
-<option value="8">8</option>
-<option value="9">9</option>
-<option value="10">10</option>
-<option value="11">11</option>
-<option value="12">12</option>
-<option value="13">1</option>
-<option value="14">2</option>
-<option value="15">3</option>
-<option value="16">4</option>
-<option value="17">5</option>
-<option value="18">6</option>
-<option value="19">7</option>
+<?
+displayHours('ls_hour');
+?>
 </select>
 <select name="ls_min">
-<option value="00">00</option>
-<option value="05">05</option>
-<option value="10">10</option>
-<option value="15">15</option>
-<option value="20">20</option>
-<option value="25">25</option>
-<option value="30">30</option>
-<option value="35">35</option>
-<option value="40">40</option>
-<option value="45">45</option>
-<option value="50">50</option>
-<option value="55">55</option>
+<?
+displayMinutes('ls_min');
+?>
 </select>
 </td></tr>
 <tr><td><? echo $form->error("ltime"); ?>End Time:</td><td>
 <select name="le_hour">
-<option value="8">8</option>
-<option value="9">9</option>
-<option value="10">10</option>
-<option value="11">11</option>
-<option value="12">12</option>
-<option value="13">1</option>
-<option value="14">2</option>
-<option value="15">3</option>
-<option value="16">4</option>
-<option value="17">5</option>
-<option value="18">6</option>
-<option value="19">7</option>
+<?
+displayHours('le_hour');
+?>
 </select>
 <select name="le_min">
-<option value="00">00</option>
-<option value="05">05</option>
-<option value="10">10</option>
-<option value="15">15</option>
-<option value="20">20</option>
-<option value="25">25</option>
-<option value="30">30</option>
-<option value="35">35</option>
-<option value="40">40</option>
-<option value="45">45</option>
-<option value="50">50</option>
-<option value="55">55</option>
+<?
+displayMinutes('le_min');
+?>
 </select>
 <tr><td colspan=2><hr></td></tr>
 </td></tr>
 <tr><td>Credits:</td><td><select name="credits">
-<option value="1">1.0</option>
-<option value="2">2.0</option>
-<option value="3">3.0</option>
-<option value="4">4.0</option>
-<option value="5">5.0</option>
-<option value="6">6.0</option>
-<option value="7">7.0</option>
+<?
+for($i = 1;$i < 8;$i++) {
+	if($form->value('credits') == $i) {
+		echo "<option value=\"".$i."\" selected=\"selected\">".$i.".0</option>\n";
+	} else {
+		echo "<option value=\"".$i."\">".$i.".0</option>\n";
+	}
+}
+?>
 </select></td></tr>
 <tr><td colspan=2><hr></td></tr>
 <tr><td>Semester:</td><td>
@@ -192,22 +161,23 @@ $date = $date['year'];
 for($i = 0;$i <= 5;$i++){
 	echo "<option value=\"";
 	echo $date+$i;
-	echo "\">";
+	if($form->value('year') == $date+$i) echo "\" selected=\"selected\">";
+	else echo "\">";
 	echo $date+$i;
 	echo "</option>";
 }
 ?>
 </select>
 <select name="time">
-<option value="s">Spring</option>
-<option value="f">Fall</option>
+<option value="s"<?if($form->value('time') == "s") echo "selected=\"selected\"";?>>Spring</option>
+<option value="f"<?if($form->value('time') == "f") echo "selected=\"selected\"";?>>Fall</option>
 </select>
 </td></tr>
 </table>
 <br/>
 <table align="center" width="%30">
 <tr>
-<td>Course Description:</td>
+<td><?echo $form->error('desc');?>Course Description:</td>
 </tr>
 <tr>
 <td>
