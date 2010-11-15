@@ -26,10 +26,10 @@ function displayMinutes($where) {
 	for($i = 0;$i < 60;$i+=5) {
 	if($i < 10){
 		if($form->value("$where") != $i) {
-			echo "<option value=\"".$i."\">0".$i."</option>\n";
+			echo "<option value=\"0".$i."\">0".$i."</option>\n";
 		}
 		else {
-			echo "<option value=\"".$i."\" selected=\"selected\">0".$i."</option>\n";
+			echo "<option value=\"0".$i."\" selected=\"selected\">0".$i."</option>\n";
 		}
 	} else {
 		if($form->value("$where") != $i) {
@@ -50,6 +50,7 @@ function displayMinutes($where) {
 	function help() {
 		var f = document.getElementsByName("myform")[0];
 		var temp = document.createElement("input");
+		temp.setAttribute("type", "hidden");
 		temp.setAttribute("name", "desc");
 		temp.setAttribute("value", document.getElementById("desc").value);
 		if(confirm('Are you sure you want to add this course?')) {
@@ -168,7 +169,7 @@ for($i = 0;$i <= 5;$i++){
 }
 ?>
 </select>
-<select name="time">
+<select name="semester">
 <option value="s"<?if($form->value('time') == "s") echo "selected=\"selected\"";?>>Spring</option>
 <option value="f"<?if($form->value('time') == "f") echo "selected=\"selected\"";?>>Fall</option>
 </select>

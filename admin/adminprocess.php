@@ -79,6 +79,9 @@ class AdminProcess
 	   if(isset($_POST['ln']) && (isset($_POST['lm']) || isset($_POST['lt']) || isset($_POST['lw']) || isset($_POST['lr']) || isset($_POST['lf']))) {
 			$form->setError("lday", "*");
 	   }
+	   if(!isset($_POST['lm']) && !isset($_POST['lt']) && !isset($_POST['lw']) && !isset($_POST['lr']) && !isset($_POST['lf']) && !isset($_POST['ln']) ) {
+		   $form->setError("lday", "*");
+	   }
 	   if((int)$_POST['s_hour'].$_POST['s_min'] >= (int)$_POST['e_hour'].$_POST['e_min']) {
 		   $form->setError("stime", "*");
 	   }
@@ -90,17 +93,54 @@ class AdminProcess
 	   if(!preg_match('/[A-Za-z]{4}[0-9]{3}/', $_POST['cnumber'])){
 			$form->setError("cnumber", "*");
 	   }
+	   $days = "";
+	   if(isset($_POST['cm'])) {
+		   $days = $days.$_POST['cm'];
+	   }
+	   if(isset($_POST['ct'])) {
+		   $days = $days.$_POST['ct'];
+	   }
+	   if(isset($_POST['cw'])) {
+		   $days = $days.$_POST['cw'];
+	   }
+	   if(isset($_POST['cr'])) {
+		   $days = $days.$_POST['cr'];
+	   }
+	   if(isset($_POST['cf'])) {
+		   $days = $days.$_POST['cf'];
+	   }
+	   $semester = $_POST['semester'];
+	   $year = $_POST['year'];
+	   $number = $_POST['cnumber'];
+	   $section = $_POST['csection'];
+	   $name = $_POST['cname'];
+	   $time = $_POST['s_hour'].":".$_POST['s_min']."-".$_POST['e_hour'].":".$_POST['e_min'];
+	   $credit = $_POST['credits'];
+	   $course = Array();
+	   $course['name'] = $name;
+	   $course['number'] = $number;
+	   $course['section'] = $section;
+	   $course['credit'] = $credit;
+	   $course['days'] = $days;
+	   $course['time'] = $time;
+	   $course['teacher'] = $_POST['cteacher'];
+	   $course['semester'] = $semester;
+	   $course['year'] = $year;
+	   $course['desc'] = $_POST['desc'];
+	   $teacher = $_POST['cteacher'];
+	   if($database->confirmCourse($teacher,$semester,$year,$time,$days) == 1) {
+		   $form->setError("listing", "$teacher is already teaching a class $semester semester $year at $time on $days");
+	   }
 	   if($form->num_errors > 0){
 		   $_SESSION['value_array'] = $_POST;
 		   $_SESSION['error_array'] = $form->getErrorArray();
 		   header("Location: add_course.php");
 	   }
-	   print_r($_POST);
-	   //Check if class is in database;
-	   $number = $_POST['cnumber'];
-	   $section = $_POST['csection'];
-	   //$q = "SELECT * FROM courses WHERE Number='$number' AND Section='$section'";
-	   //$database->query($q);
+	   
+	   $database->addCourse($course);
+	   echo "<h1>Course Added</h1>";
+	   echo "You will be automatically redirected back to the Admin Center.<br>If does not happen within 5 seconds please click <a href=\"tools.php\">here</a>";
+	   header("Refresh: 4; URL=tools.php");
 
    }
 

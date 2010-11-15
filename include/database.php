@@ -75,10 +75,45 @@ class MySQLDB
       }
    }
 
-   function confirmCourse($number, $section, $semester) {
-
+   function confirmCourse($tea, $sem, $year, $time, $days) {
+	   $q = "SELECT cid 
+		   FROM courses NATURAL JOIN years 
+		   WHERE teacher = '$tea' AND time = '$time' AND days = '$days' AND year = '$year' AND semester = '$sem'";
+	   $result = mysql_query($q, $this->connection);
+	   if(mysql_numrows($result) < 1) {
+		   return 0; //No course
+	   }
+	   else {
+		   return 1; //A similar course exists
+	   }
    }
-   
+
+   function addCourse($course) {
+	   $title = $course['name'];
+	   $number = $course['number'];
+	   $section = $course['section'];
+	   $time = $course['time'];
+	   $days = $course['days'];
+	   $credit = $course['credit'];
+	   $teacher = $course['teacher'];
+	   $desc = $course['desc'];
+	   $year = (int)$course['year'];
+	   $semester = $course['semester'];
+	   $q = "INSERT INTO courses (title, number, section, time, days, credits, teacher, description) VALUES('$title','$number','$section','$time','$days','$credit','$teacher','$desc')";
+	   mysql_query($q, $this->connection);
+	   $row = mysql_fetch_array(mysql_query("SELECT LAST_INSERT_ID()", $this->connection));
+	   $cid = $row[0];
+	   $q = "INSERT INTO years (cid, semester, year) VALUES($cid, '$semester', $year)";
+	   mysql_query($q, $this->connection);
+	   //Insert lab if exists
+	   //insert video if exists
+   }
+
+   function getCourses($year, $semester) {
+	   $q = "SELECT * FROM courses NATURAL JOIN years WHERE year = '$year' AND semester = '$semester'";
+	   return mysql_fetch_array(mysql_query($q, $this->connection));
+   }
+
    /**
     * confirmUserID - Checks whether or not the given
     * username is in the database, if so it checks if the
