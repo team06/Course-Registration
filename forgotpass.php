@@ -20,7 +20,7 @@ include("include/session.php");
 ?>
 
 <html>
-<title>Jpmaster77's Login Script</title>
+<title>Honors Academy</title>
 <body>
 
 <?

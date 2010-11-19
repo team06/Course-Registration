@@ -77,6 +77,36 @@ class Session
       $this->url = $_SESSION['url'] = $_SERVER['PHP_SELF'];
    }
 
+   function displayHeader() {
+	   if($this->logged_in){
+		   echo "<h1>Honors Academy Course Registration</h1>";
+		   echo "Welcome <b>$this->username</b>, you are logged in. <br><br>"
+			   ."<div align=\"center\">[<a href=\"userinfo.php?user=$this->username\">My Account</a>] &nbsp;&nbsp;";
+		   //    ."[<a href=\"useredit.php\">Edit Account</a>] &nbsp;&nbsp;";
+		   if($this->isAdmin()){
+			   echo "[<a href=\"admin/admin.php\">Admin Center</a>] &nbsp;&nbsp;";
+		   }
+		   echo "[<a href=\"listing.php\">Courses</a>] &nbsp;&nbsp;";
+		   echo "[<a href=\"process.php\">Logout</a>]</div>";
+		   return true;
+	   }
+	   return false;
+   }
+   function displayAdminHeader() {
+	   if($this->logged_in){
+		   echo "<h1>Honors Academy Course Registration</h1>";
+		   echo "Welcome <b>$this->username</b>, you are logged in. <br><br>"
+			   ."<div align=\"center\">[<a href=\"../userinfo.php?user=$this->username\">My Account</a>] &nbsp;&nbsp;";
+		   //    ."[<a href=\"useredit.php\">Edit Account</a>] &nbsp;&nbsp;";
+		   if($this->isAdmin()){
+			   echo "[<a href=\"\">Admin Center</a>] &nbsp;&nbsp;";
+		   }
+		   echo "[<a href=\"../listing.php\">Courses</a>] &nbsp;&nbsp;";
+		   echo "[<a href=\"../process.php\">Logout</a>]</div>";
+		   return true;
+	   }
+	   return false;
+   }
    /**
     * checkLogin - Checks if the user has already previously
     * logged in, and a session with the user has already been

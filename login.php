@@ -27,18 +27,7 @@ include("include/session.php");
  * User has already logged in, so display relavent links, including
  * a link to the admin center if the user is an administrator.
  */
-if($session->logged_in){
-   echo "<h1>Honors Academy Course Registration</h1>";
-   echo "Welcome <b>$session->username</b>, you are logged in. <br><br>"
-       ."<div align=\"center\">[<a href=\"userinfo.php?user=$session->username\">My Account</a>] &nbsp;&nbsp;";
-   //    ."[<a href=\"useredit.php\">Edit Account</a>] &nbsp;&nbsp;";
-   if($session->isAdmin()){
-      echo "[<a href=\"admin/admin.php\">Admin Center</a>] &nbsp;&nbsp;";
-   }
-   echo "[<a href=\"listing.php\">Courses</a>] &nbsp;&nbsp;";
-   echo "[<a href=\"process.php\">Logout</a>]</div>";
-}
-else{
+if(!$session->displayHeader()) {
 ?>
 
 <h1>Login</h1>
@@ -68,7 +57,6 @@ if($form->num_errors > 0){
 
 <?
 }
-
 /**
  * Just a little page footer, tells how many registered members
  * there are, how many users currently logged in and viewing site,
