@@ -1,5 +1,4 @@
 <?php
-include("../include/session.php");
 
 if(!$session->isAdmin()) {
 	header("Location: ../login.php");
@@ -44,39 +43,21 @@ function displayMinutes($where) {
 }
 
 ?>
-<html>
-<head>
-<script type="text/javascript">
-	function help() {
-		var f = document.getElementsByName("myform")[0];
-		var temp = document.createElement("input");
-		temp.setAttribute("type", "hidden");
-		temp.setAttribute("name", "desc");
-		temp.setAttribute("value", document.getElementById("desc").value);
-		if(confirm('Are you sure you want to add this course?')) {
-			f.appendChild(temp);
-			return true;
-		}
-		return false;
-	}
-</script>
-</head>
-<body>
-<h1>Course Add Form</h1>
+
 <?
 if($form->num_errors > 0) {
 
-	echo "<font size=\"4\" color=\"#ff0000\">"
-		."!*** Error with request, please fix</font><br><br>";
+	echo "<div align=\"center\"><font size=\"4\" color=\"#ff0000\">"
+		."!*** Error with request, please fix</font><br><br></div>";
 }
 ?>
 <form name="myform" action="adminprocess.php" method="POST" enctype="multipart/form-data "onsubmit="return help()">
-<table align="center" width="50%" cellspacing="5">
+<table class="courses1" align="center" width="50%" cellspacing="5">
 <tr><td><? echo $form->error("cname");?>Course Title:</td><td><input type="text" size="30" name="cname" value="<?echo $form->value('cname');?>"/></td></tr>
 <tr><td></td><td></td></tr>
 <tr><td><? echo $form->error("cnumber");?>Course Number:</td><td><input type="text" size="7" name="cnumber" value="<?echo $form->value('cnumber');?>"/>&nbsp;&nbsp;<font size=1>i.e. HIST101</font><td></tr>
 <tr><td><? echo $form->error("csection");?>Section Number:<br><font size=1></font></td><td><input type="text" size="2" name="csection" value="<?echo $form->value('csection');?>"/></td></tr>
-<tr><td><? echo $form->error("cteacher");?>Teacher:</td><td<input type="text" name="cteacher" value="<?echo $form->value('cteacher')?>"/></td></tr>
+<tr><td><? echo $form->error("cteacher");?>Teacher:</td><td><input type="text" name="cteacher" value="<?echo $form->value('cteacher')?>"/></td></tr>
 <tr><td colspan=2><hr></td></tr>
 <tr><td><? echo $form->error("cday");?>Class Day(s):</td><td>
 M<input type="checkbox" name="cm" value="M"<?if($form->value('cm') == "M") echo "checked=\"yes\"";?>/>
@@ -176,7 +157,7 @@ for($i = 0;$i <= 5;$i++){
 </td></tr>
 </table>
 <br/>
-<table align="center" width="%30">
+<table class="courses2" align="center" width="%30">
 <tr>
 <td><?echo $form->error('desc');?>Course Description:</td>
 </tr>
@@ -194,7 +175,7 @@ for($i = 0;$i <= 5;$i++){
 </tr>
 </table>
 <br/>
-<table align="center" width="%40" cellspacing="5">
+<table class="courses3" align="center" width="%40" cellspacing="5">
 <tr><td>Video:</td><td><input type="file" name="video"/></td></tr>
 <tr></tr>
 <input type="hidden" name="subaddcourse" value="1"/>
@@ -202,5 +183,3 @@ for($i = 0;$i <= 5;$i++){
 <tr><td colspan=2><div align="center"><input type="submit" value="Add Course"/></div></td></tr>
 </table>
 </form>
-</body>
-</html>

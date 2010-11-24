@@ -18,7 +18,7 @@ if($session->logged_in) {
 		."<div align=\"center\">[<a href=\"login.php\">Main</a>] &nbsp;&nbsp;[<a href=\"userinfo.php?user=$session->username\">My Account</a>] &nbsp;&nbsp;";
 	//    ."[<a href=\"useredit.php\">Edit Account</a>] &nbsp;&nbsp;";
 	if($session->isAdmin()){
-		echo "[<a href=\"admin/admin.php\">Admin Center</a>] &nbsp;&nbsp;";
+		echo "[<a href=\"admin/\">Admin Center</a>] &nbsp;&nbsp;";
 	}
 	echo "[<a href=\"listing.php\">Courses</a>] &nbsp;&nbsp;";
 	echo "[<a href=\"process.php\">Logout</a>]</div></div>";
@@ -33,7 +33,7 @@ if($session->logged_in) {
 function displayCourses() {
 	global $database;
 	if($_POST != Array()) {
-		echo "<table align=\"center\"><tr><td><a href=\"listing.php\">Go back</a></td></tr></table>";
+		echo "<div align=\"center\"><a href=\"listing.php\">Go back</a></div>";
 		echo "<table align=\"center\" cellspacing=\"5\" cellpadding=\"5\" border=\"1\">";
 		echo "<tr><th>Course Number</th><th>Section</th><th>Title</th><th>Credits</th><th>Days</th><th>Time</th><th>Instructor</th></tr>";
 		$y = $_POST['year'];
@@ -56,26 +56,59 @@ function displayCourses() {
 
 function displaySelect() {
 	if($_POST != Array()) return;
-	echo "<table align=\"center\">";
-	echo "<tr><th>Year</th><th>Semester</th></tr>";
-	echo "<tr><td>";
+	echo "<div align=\"center\">Select year and semester</div><br>";
+	echo "<div align=\"center\">";
 	echo "<select name=\"year\">";
 	getYearRange();
 	echo "</select>";
-	echo "</td><td>";
 	echo "<select name=\"semester\">";
 	echo "<option value=\"s\">Spring</option>";
 	echo "<option value=\"f\">Fall</option>";
 	echo "</select>";
-	echo "</td><td>";
 	echo "<input type=\"submit\" value=\"Load\">";
-	echo "</td></tr>";
-	echo "</table>";
+	echo "</div>";
 }
 ?>
 <html>
 <title>Honors Academy</title>
+<head>
+<style type="text/css">
+table, td, th
+{
+border:1px solid black;
+border-collapse:collapse;
+}
+.left_side
+{
+position:absolute;
+top:0px;
+left:0px;
+background-color:#0033CC;
+width:15%;
+height:100%;
+}
+.right_side
+{
+position:absolute;
+top:0px;
+right:0px;
+background-color:#0033CC;
+width:15%;
+height:100%;
+}
+.bottom
+{
+position:absolute;
+bottom:0px;
+background-color:#0033CC;
+width:90%;
+height:10%;
+}
+</style>
+</head>
 <body>
+<div class="left_side"></div>
+<div class="right_side"></div>
 <form action="listing.php" method="POST">
 <? displaySelect(); ?>
 </form>
@@ -86,5 +119,6 @@ function displaySelect() {
 }
 ?>
 <? displayCourses(); ?>
+<div class="bottom"></div>
 </body>
 </html>

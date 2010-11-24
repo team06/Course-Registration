@@ -15,7 +15,7 @@ class AdminProcess
 {
    /* Class constructor */
    function AdminProcess(){
-      global $session;
+      global $session, $database;
       /* Make sure administrator is accessing page */
       if(!$session->isAdmin()){
          header("Location: ../login.php");
@@ -44,6 +44,9 @@ class AdminProcess
 	  /* Admin submitted file of users to add */
 	  else if(isset($_POST['subaddusers'])) {
 		$this->addUsersFromFile();
+	  }
+	  else if(isset($_POST['subadduser'])) {
+		  $this->addUser();
 	  }
 	  else if(isset($_POST['subaddcourse'])) {
 		$this->addCourse();
@@ -134,14 +137,23 @@ class AdminProcess
 	   if($form->num_errors > 0){
 		   $_SESSION['value_array'] = $_POST;
 		   $_SESSION['error_array'] = $form->getErrorArray();
-		   header("Location: add_course.php");
+		   header("Location: index.php?d=ac");
+	   } else {
+		   $database->addCourse($course);
+		   echo "<h1>Course Added</h1>";
+		   echo "You will be automatically redirected back to the Admin Center.<br>If does not happen within 5 seconds please click <a href=\"tools.php\">here</a>";
+		   header("Refresh: 4; URL=index.php?d=mc");
 	   }
-	   
-	   $database->addCourse($course);
-	   echo "<h1>Course Added</h1>";
-	   echo "You will be automatically redirected back to the Admin Center.<br>If does not happen within 5 seconds please click <a href=\"tools.php\">here</a>";
-	   header("Refresh: 4; URL=tools.php");
 
+   }
+
+   function addUser() {
+	   global $session, $database, $form;
+	   $uname = $_POST['uname'];
+	   $pass = $_POST['pass'];
+	   $email = $_POST['email'];
+	   $session->register($uname, $pass, $email);
+	   header("Location: index.php?d=mu");
    }
 
    function addUsersFromFile() {

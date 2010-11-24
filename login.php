@@ -16,11 +16,46 @@ include("include/session.php");
 
 <html>
 <title>Honors Academy</title>
+<head>
+<style type="text/css">
+.left
+{
+position:absolute;
+left:25%;
+}
+.left_side
+{
+position:absolute;
+top:0px;
+left:0px;
+background-color:#0033CC;
+width:15%;
+height:100%;
+}
+.right_side
+{
+position:absolute;
+top:0px;
+right:0px;
+background-color:#0033CC;
+width:15%;
+height:100%;
+}
+.bottom
+{
+position:absolute;
+bottom:0px;
+background-color:#0033CC;
+width:90%;
+height:10%;
+}
+</style>
+</head>
 <body>
+<div class="left_side"></div>
+<div class="right_side"></div>
 
-<table align="center">
-<tr><td>
-
+<div align="center">
 
 <?
 /**
@@ -29,7 +64,6 @@ include("include/session.php");
  */
 if(!$session->displayHeader()) {
 ?>
-
 <h1>Login</h1>
 <?
 /**
@@ -43,7 +77,7 @@ if($form->num_errors > 0){
 }
 ?>
 <form action="process.php" method="POST">
-<table align="left" border="0" cellspacing="0" cellpadding="3">
+<table align="center" border="0" cellspacing="0" cellpadding="3">
 <tr><td>Username:</td><td><input type="text" name="user" maxlength="30" value="<? echo $form->value("user"); ?>"></td><td><? echo $form->error("user"); ?></td></tr>
 <tr><td>Password:</td><td><input type="password" name="pass" maxlength="30" value="<? echo $form->value("pass"); ?>"></td><td><? echo $form->error("pass"); ?></td></tr>
 <tr><td colspan="2" align="left"><input type="checkbox" name="remember" <? if($form->value("remember") != ""){ echo "checked"; } ?>>
@@ -54,7 +88,6 @@ if($form->num_errors > 0){
 <!--<tr><td colspan="2" align="left"><br>Not registered? <a href="register.php">Sign-Up!</a></td></tr>-->
 </table>
 </form>
-
 <?
 }
 /**
@@ -63,19 +96,15 @@ if($form->num_errors > 0){
  * and how many guests viewing site. Active users are displayed,
  * with link to their user information.
  */
-echo "</td></tr><tr><td align=\"center\"><br><br>";
+echo "<div align=\"center\"><br><br>";
 echo "<b>Member Total:</b> ".$database->getNumMembers()."<br>";
 echo "There are $database->num_active_users registered members and ";
-echo "$database->num_active_guests guests viewing the site.<br><br>";
+echo "$database->num_active_guests guests viewing the site.<br><br></div>";
 
 include("include/view_active.php");
 
 ?>
-
-
-</td></tr>
-</table>
-
-
+</div>
+<div class="bottom"></div>
 </body>
 </html>
