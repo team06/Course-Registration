@@ -81,7 +81,7 @@ class Session
 	   if($this->logged_in){
 		   echo "<h1>Honors Academy Course Registration</h1>";
 		   echo "Welcome <b>$this->username</b>, you are logged in. <br><br>"
-			   ."<div align=\"center\">[<a href=\"userinfo.php?user=$this->username\">My Account</a>] &nbsp;&nbsp;";
+			   ."<div align=\"center\">[<a href=\"login.php\">Main</a>] &nbsp;&nbsp;";
 		   //    ."[<a href=\"useredit.php\">Edit Account</a>] &nbsp;&nbsp;";
 		   if($this->isAdmin()){
 			   echo "[<a href=\"admin/\">Admin Center</a>] &nbsp;&nbsp;";
@@ -97,11 +97,10 @@ class Session
 		   echo "<h1>Honors Academy Course Registration</h1>";
 		   echo "Welcome <b>$this->username</b>, you are logged in. <br><br>"
 			   ."<div align=\"center\">"
-			   ."[<a href=\"../index.php\">Main</a>] &nbsp;&nbsp;"
-			   ."[<a href=\"../userinfo.php?user=$this->username\">My Account</a>] &nbsp;&nbsp;";
+			   ."[<a href=\"../index.php\">Main</a>] &nbsp;&nbsp;";
 		   //    ."[<a href=\"useredit.php\">Edit Account</a>] &nbsp;&nbsp;";
 		   if($this->isAdmin()){
-			   echo "[<a href=\"\">Admin Center</a>] &nbsp;&nbsp;";
+			   echo "[<a href=\"index.php\">Admin Center</a>] &nbsp;&nbsp;";
 		   }
 		   echo "[<a href=\"../listing.php\">Courses</a>] &nbsp;&nbsp;";
 		   echo "[<a href=\"../process.php\">Logout</a>]</div>";

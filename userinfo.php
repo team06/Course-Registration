@@ -12,7 +12,7 @@ include("include/session.php");
 ?>
 
 <html>
-<title>Jpmaster77's Login Script</title>
+<title>Honors Academy</title>
 <body>
 
 <?
@@ -55,8 +55,8 @@ echo "<b>Email:</b> ".$req_user_info['email']."<br>";
  */
 
 /* If logged in user viewing own account, give link to edit */
-if(strcmp($session->username,$req_user) == 0){
-   echo "<br><a href=\"useredit.php\">Edit Account Information</a><br>";
+if($session->isAdmin()){
+   echo "<br><a href=\"useredit.php?user=$req_user\">Edit Account Information</a><br>";
 }
 
 /* Link back to main */

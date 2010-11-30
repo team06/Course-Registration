@@ -29,7 +29,7 @@ function displayUsers(){
 
 	  echo "<tr><td class=\"users\">$uname</td><td class=\"users\">$ulevel</td><td class=\"users\">$email</td><td class=\"users\">".
 		  "<a href=\"del_user.php?u=$uname\" onclick=\"return confirm('Do you want to delete user $uname?');\"><img src=\"del.jpg\" border=\"0\"/></a></td>";
-	  echo "<td class=\"users\"><a href=\"\"><img src=\"edit.jpg\" border=\"0\" width=\"25\" height=\"25\"/></a></td></tr>\n";
+	  echo "<td class=\"users\"><a href=\"../useredit.php?user=$uname\"><img src=\"edit.jpg\" border=\"0\" width=\"25\" height=\"25\"/></a></td></tr>\n";
    }
    echo "</table><br>\n";
 }
@@ -49,6 +49,15 @@ table.courses3
 {
 position:relative;
 }
+table.main
+{
+position:relative;
+left:20%;
+}
+td.main
+{
+padding:0;
+}
 table.users
 {
 position:relative;
@@ -58,10 +67,6 @@ table.users, td.users, th.users
 {
 border:1px solid black;
 border-collapse:collapse;
-}
-td.users 
-{
-text-align:center;
 }
 .sidebar
 {
@@ -127,7 +132,70 @@ $session->displayAdminHeader();
 <li><a href="index.php?d=af">Add Users From File</a>&nbsp;&nbsp;</li>
 </ul>
 <?
-if($_GET['d'] == 'mc') {
+if(!isset($_GET['d'])) {
+	global $database;
+	//BACKUP PLAN:Simple true false for registering
+	echo '<table class="main">';
+	echo '<tr><td>Set Registration Date</td></tr>';
+	echo '<tr><td>Start<br>';
+	echo '<table>';
+	echo '<tr><td>Day&nbsp;&nbsp;</td><td><select name="s_day">';
+	for($i = 1;$i < 32;$i+=1) {
+		echo '<option value='.$i.'>'.$i.'</option>';
+	}
+	echo '</select></td></tr>';
+	echo '<tr><td>Month&nbsp;&nbsp;</td><td><select name="s_month">';
+	for($i = 1;$i < 13;$i+=1) {
+		echo '<option value='.$i.'>'.$i.'</option>';
+	}
+	echo '</select></td></tr>';
+	echo '<tr><td>Year&nbsp;&nbsp;</td><td><select name="s_year">';
+	$year = getdate();
+	$year = $year['year'];
+	for($i = 0;$i < 2;$i+=1) {	
+		$j = $year+$i;
+		echo '<option value='.$j.'>'.$j.'</option>';
+	}
+	echo '</select></td></tr>';
+	echo '<tr><td>Hour&nbsp;&nbsp;</td><td><select name="s_hour">';
+	for($i = 8;$i < 24;$i+=1) {
+		if($i < 13) echo '<option value='.$i.'>'.$i.'</option>';
+		else echo '<option value='.($i-12).'>'.($i-12).'</option>';
+	}
+	echo '</select></td></tr>';
+	echo '</table>';
+	echo '</td><td>End<br>';
+	echo '<table>';
+	echo '<tr><td>Day&nbsp;&nbsp;</td><td><select name="e_day">';
+	for($i = 1;$i < 32;$i+=1) {
+		echo '<option value='.$i.'>'.$i.'</option>';
+	}
+	echo '</select></td></tr>';
+	echo '<tr><td>Month&nbsp;&nbsp;</td><td><select name="e_month">';
+	for($i = 1;$i < 13;$i+=1) {
+		echo '<option value='.$i.'>'.$i.'</option>';
+	}
+	echo '</select></td></tr>';
+	echo '<tr><td>Year&nbsp;&nbsp;</td><td><select name="e_year">';
+	$year = getdate();
+	$year = $year['year'];
+	for($i = 0;$i < 2;$i+=1) {	
+		$j = $year+$i;
+		echo '<option value='.$j.'>'.$j.'</option>';
+	}
+	echo '</select></td></tr>';
+	echo '<tr><td>Hour&nbsp;&nbsp;</td><td><select name="e_hour">';
+	for($i = 8;$i < 24;$i+=1) {
+		if($i < 13) echo '<option value='.$i.'>'.$i.'</option>';
+		else echo '<option value='.($i-12).'>'.($i-12).'</option>';
+	}
+	echo '</select></td></tr>';
+	echo '</table>';
+	echo '</td></tr>';
+	echo '<tr><td>Send out Registration passwords to all users</td></tr>';
+	echo '</table>';
+}
+else if($_GET['d'] == 'mc') {
 	$q = "SELECT * FROM courses NATURAL JOIN years";
 	$result = $database->query($q);
 	echo "<table class=\"users\">";
@@ -155,11 +223,12 @@ else if($_GET['d'] == 'mu') {
 	displayUsers();	
 }
 else if($_GET['d'] == 'au') {
+	global $form;
 	echo '<form action="adminprocess.php" method="POST">';
 	echo '<table align="center"><tr><th colspan=2>New User Information</th></tr>';
-	echo '<tr><td>Username:&nbsp;&nbsp;</td><td><input type="text" name="uname"/></td></tr>';
-	echo '<tr><td>Password:&nbsp;&nbsp;</td><td><input type="password" name="pass"/></td></tr>';
-	echo '<tr><td>E-mail:&nbsp;&nbsp;</td><td><input type="text" name="email"/></td></tr></table>';
+	echo '<tr><td>Username:&nbsp;&nbsp;</td><td><input type="text" name="uname" value="'.$form->value('uname').'"/></td><td>'.$form->error("user").'</td></tr>';
+	echo '<tr><td>Password:&nbsp;&nbsp;</td><td><input type="password" name="pass"/></td><td>'.$form->error("pass").'</td></tr>';
+	echo '<tr><td>E-mail:&nbsp;&nbsp;</td><td><input type="text" name="email" value="'.$form->value('email').'"/></td><td>'.$form->error("email").'</td></tr></table>';
 	echo '<p align="center"><input type="submit" value="Add"/>';
 	echo '<input type="hidden" name="subadduser" value="1"/></p></form>';
 }

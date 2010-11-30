@@ -14,7 +14,7 @@ include("include/session.php");
 ?>
 
 <html>
-<title>Jpmaster77's Login Script</title>
+<title>Honors Academy</title>
 <body>
 
 <?
@@ -39,10 +39,10 @@ else{
  * account information, with the current email address
  * already in the field.
  */
-if($session->logged_in){
+if($session->isAdmin()){
 ?>
 
-<h1>User Account Edit : <? echo $session->username; ?></h1>
+<h1>User Account Edit : <? echo $_GET['user']; ?></h1>
 <?
 if($form->num_errors > 0){
    echo "<td><font size=\"2\" color=\"#ff0000\">".$form->num_errors." error(s) found</font></td>";
@@ -50,12 +50,25 @@ if($form->num_errors > 0){
 ?>
 <form action="process.php" method="POST">
 <table align="left" border="0" cellspacing="0" cellpadding="3">
+<?
+if(!$session->isAdmin())
+{
+?>
 <tr>
 <td>Current Password:</td>
 <td><input type="password" name="curpass" maxlength="30" value="
 <?echo $form->value("curpass"); ?>"></td>
 <td><? echo $form->error("curpass"); ?></td>
 </tr>
+<?
+}
+else
+{
+?>
+<input type="hidden" name="subisadmin" value="1"/>
+<?
+}
+?>
 <tr>
 <td>New Password:</td>
 <td><input type="password" name="newpass" maxlength="30" value="
@@ -67,7 +80,11 @@ if($form->num_errors > 0){
 <td><input type="text" name="email" maxlength="50" value="
 <?
 if($form->value("email") == ""){
-   echo $session->userinfo['email'];
+	global $database;
+	$uname = $_GET['user'];
+	$result = $database->query("SELECT * FROM users WHERE username = '$uname'");
+	$user = mysql_fetch_array($result);
+   echo $user['email'];
 }else{
    echo $form->value("email");
 }
@@ -83,6 +100,10 @@ if($form->value("email") == ""){
 </form>
 
 <?
+}
+else {
+	$user = $_GET['user'];
+	header("Location: userinfo.php?$user");
 }
 }
 

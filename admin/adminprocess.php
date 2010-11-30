@@ -152,8 +152,13 @@ class AdminProcess
 	   $uname = $_POST['uname'];
 	   $pass = $_POST['pass'];
 	   $email = $_POST['email'];
-	   $session->register($uname, $pass, $email);
-	   header("Location: index.php?d=mu");
+	   if($session->register($uname, $pass, $email) == 1) {
+		   $_SESSION['value_array'] = $_POST;
+		   $_SESSION['error_array'] = $form->getErrorArray();
+		   header("Location: index.php?d=au");
+	   } else {
+		   header("Location: index.php?d=mu");
+	   }
    }
 
    function addUsersFromFile() {

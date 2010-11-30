@@ -33,6 +33,9 @@ class Process
       else if(isset($_POST['subedit'])){
          $this->procEditAccount();
       }
+	  else if(isset($_POST['subisadmin'])) {
+		  $this->procEditAccountAdmin();
+	  }
       /**
        * The only other reason user should be directed here
        * is if he wants to logout, which means user is
@@ -179,6 +182,24 @@ class Process
       global $session, $form;
       /* Account edit attempt */
       $retval = $session->editAccount($_POST['curpass'], $_POST['newpass'], $_POST['email']);
+
+      /* Account edit successful */
+      if($retval){
+         $_SESSION['useredit'] = true;
+         header("Location: ".$session->referrer);
+      }
+      /* Error found with form */
+      else{
+         $_SESSION['value_array'] = $_POST;
+         $_SESSION['error_array'] = $form->getErrorArray();
+         header("Location: ".$session->referrer);
+      }
+   }
+   
+   function procEditAccountAdmin(){
+      global $session, $form;
+      /* Account edit attempt */
+      $retval = $session->editAccount($_POST['newpass'], $_POST['newpass'], $_POST['email']);
 
       /* Account edit successful */
       if($retval){
