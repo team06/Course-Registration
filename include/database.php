@@ -99,6 +99,7 @@ class MySQLDB
 		$desc = $course['desc'];
 		$year = (int)$course['year'];
 		$semester = $course['semester'];
+		$max = $course['max'];
 		$q = "INSERT INTO courses (title, number, section, time, days, credits, teacher, description) 
 			VALUES('$title','$number','$section','$time','$days','$credit','$teacher','$desc')";
 		mysql_query($q, $this->connection);
@@ -106,8 +107,10 @@ class MySQLDB
 		$cid = $row[0];
 		$q = "INSERT INTO years (cid, semester, year) VALUES($cid, '$semester', $year)";
 		mysql_query($q, $this->connection);
+		$q = "INSERT INTO seats (cid, available, max) VALUES($cid, $max, $max)";
+		mysql_query($q, $this->connection);
 		//Insert lab if exists
-		if(isset($course['l_time'])) {
+		if($course['lab'] != "") {
 			$l_time = $course['l_time'];
 			$l_days = $course['lab'];
 			$q = "INSERT INTO lab VALUES($cid, '$l_days', '$l_time')";

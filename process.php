@@ -245,11 +245,11 @@ class Process
       /* Account edit attempt */
 	  $subnewpass = $_POST['newpass'];
 	  $subnewpass = stripslashes($subnewpass);
-	  if(strlen($subnewpass) < 4){
+	  if(strlen($subnewpass) < 4 && $subnewpass != ""){
 		  $form->setError("newpass", "* New Password too short");
 	  }
 	  /* Check if password is not alphanumeric */
-	  else if(!eregi("^([0-9a-z])+$", ($subnewpass = trim($subnewpass)))){
+	  else if(!eregi("^([0-9a-z])+$", ($subnewpass = trim($subnewpass))) && $subnewpass != ""){
 		  $form->setError("newpass", "* New Password not alphanumeric");
 	  }
 	  if($form->num_errors > 0) {
@@ -258,8 +258,11 @@ class Process
 		  header("Location: useredit.php?user=".$_POST['uname']);
 	  } else {
 
-		  $result = $database->updateUserField($_POST['uname'],"password",md5($subnewpass));
-		  if($result) {
+		  if($subnewpass != "") $result1 = $database->updateUserField($_POST['uname'],"password",md5($subnewpass));
+		  else $result1 = 1;
+		  $result2 = $database->updateUserField($_POST['uname'],"email",$_POST['email']);
+		  $result3 = $database->updateUserField($_POST['uname'],"honors_status", $_POST['status']);
+		  if($result1 && $result2 && $result3) {
 			  $_SESSION['useredit'] = true;
 			  header("Location: admin/index.php?d=mu");
 		  }

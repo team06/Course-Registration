@@ -151,6 +151,14 @@ class AdminProcess
 	   if(!preg_match('/[A-Za-z]{4}[0-9]{3}/', $_POST['cnumber'])){
 			$form->setError("cnumber", "*");
 	   }
+	   if(!isset($_POST['max'])) {
+		   $form->setError("max", "*");
+	   }
+	   else {
+		   if(!preg_match('/[0-9]+/', $_POST['max'])) {
+			   $form->setError("max", "*");
+		   }
+	   }
 	   $days = "";
 	   $lab = "";
 	   if(isset($_POST['cm'])) {
@@ -203,12 +211,9 @@ class AdminProcess
 	   $course['semester'] = $semester;
 	   $course['year'] = $year;
 	   $course['desc'] = $_POST['desc'];
-	   if($lab != "N") {
-		   $course['lab'] = $lab;
-		   $course['l_time'] = $l_time;
-	   }
-	   print_r($_FILES);
-	   print_r($_POST);
+	   $course['max'] = $_POST['max'];
+	   $course['lab'] = $lab;
+	   $course['l_time'] = $l_time;
 	   if(isset($_FILES['video']['tmp_name'])) {
 		   $target_path = "videos/";
 		   $allowed = Array("wmv", "avi", "mkv", "mov");
@@ -235,6 +240,7 @@ class AdminProcess
 
    function addUser() {
 	   global $session, $database, $form;
+	   $sid =$_POST['sid'];
 	   $uname = $_POST['uname'];
 	   $pass = $_POST['pass'];
 	   $email = $_POST['email'];
@@ -244,12 +250,15 @@ class AdminProcess
 	   if($pass == "") {
 		   $pass = $session->generateRandStr(9);
 	   }
+	   if(!preg_match('/[0-9]{9}/', $sid)) {
+		   $form->setError("sid", "* Student ID not long enough or contains a letter");
+	   }
 	   if($session->register($uname, $pass, $email) == 1) {
 		   $_SESSION['value_array'] = $_POST;
 		   $_SESSION['error_array'] = $form->getErrorArray();
 		   header("Location: index.php?d=au");
 	   } else {
-		   $q = "UPDATE users SET first_name='$first', last_name='$last', honors_status='$status' WHERE username='$uname'";
+		   $q = "UPDATE users SET sid='$sid', first_name='$first', last_name='$last', honors_status='$status' WHERE username='$uname'";
 		   $database->query($q);
 		   header("Location: index.php?d=mu");
 	   }

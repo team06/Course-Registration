@@ -63,6 +63,7 @@ padding:0;
 table.users
 {
 position:relative;
+width:50%;
 left:20%;
 }
 table.users, td.users, th.users 
@@ -221,8 +222,12 @@ else if($_GET['d'] == 'mc') {
 	$q = "SELECT * FROM courses NATURAL JOIN years";
 	$result = $database->query($q);
 	echo "<table class=\"users\">";
-	echo "<tr><th class=\"users\">Title</th><th class=\"users\">Number</th><th class=\"users\">Time</th><th class=\"users\">Semester</th><th class=\"users\">Delete</th><th class=\"users\">Edit</th></tr>";
+	echo "<tr><th class=\"users\">Title</th><th class=\"users\">Number</th><th class=\"users\">Time</th><th class=\"users\">Available</th><th class=\"users\">Max</th><th class=\"users\">Semester</th><th class=\"users\">Delete</th><th class=\"users\">View</th></tr>";
 	while($course = mysql_fetch_array($result)) {
+		$cid = $course['cid'];
+		$seats = mysql_fetch_array($database->query("SELECT * FROM seats WHERE cid=$cid"));
+		$max = $seats['max'];
+		$avail = $seats['available'];
 		echo "<tr><td class=\"users\">";
 		echo $course['title'];
 		echo"</td><td class=\"users\">";
@@ -230,13 +235,16 @@ else if($_GET['d'] == 'mc') {
 		echo "</td><td class=\"users\">";
 		echo $course['time'];
 		echo "</td><td class=\"users\">";
+		echo $avail;
+		echo "</td><td class=\"users\">";
+		echo $max;
+		echo "</td><td class=\"users\">";
 		echo $course['year']." ".($course['semester'] == "s" ? "Spring" : "Fall");
 		echo "</td><td class=\"users\">";
-		$cid = $course['cid'];
 		$title = $course['title'];
 		echo "<a href=\"del_course.php?cid=$cid\" onclick=\"return confirm('Do you want to delete $title?');\"><img src=\"del.jpg\" border=\"0\"></a>";
 		echo "</td><td class=\"users\">";
-		echo "<a href=\"../course.php?cid=$cid\"><img alt=\"Edit Course\" src=\"edit.jpg\" height=\"25\" width=\"25\" border=\"0\"></a>";
+		echo "<a href=\"../course.php?cid=$cid\"><img alt=\"View Course\" src=\"edit.jpg\" height=\"25\" width=\"25\" border=\"0\"></a>";
 		echo "</td></tr>";
 	}
 	echo "</table>";
@@ -248,6 +256,7 @@ else if($_GET['d'] == 'au') {
 	global $form;
 	echo '<form action="adminprocess.php" method="POST">';
 	echo '<table align="center"><tr><th colspan=2>New User Information</th></tr>';
+	echo '<tr><td>SID:&nbsp;&nbsp;</td><td><input type="text" name="sid" value="'.$form->value('sid').'"/></td><td>'.$form->error("sid").'</td></tr>';
 	echo '<tr><td>Username:&nbsp;&nbsp;</td><td><input type="text" name="uname" value="'.$form->value('uname').'"/></td><td>'.$form->error("user").'</td></tr>';
 	echo '<tr><td>Password:&nbsp;&nbsp;</td><td><input type="password" name="pass"/> (Leave blank for random password)</td><td>'.$form->error("pass").'</td></tr>';
 	echo '<tr><td>E-mail:&nbsp;&nbsp;</td><td><input type="text" name="email" value="'.$form->value('email').'"/></td><td>'.$form->error("email").'</td></tr>';

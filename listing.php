@@ -137,7 +137,12 @@ height:10%;
 </style>
 </head>
 <body>
-<? echo $form->error("signup");?>
+<? 
+global $form;
+echo '<div align="center">';
+echo $form->error("signup");
+echo '</div>';
+?>
 <form action="listing.php" method="POST">
 <? displaySelect(); ?>
 </form>

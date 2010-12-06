@@ -64,6 +64,10 @@ background-color:#0033CC;
 width:90%;
 height:10%;
 }
+table, td
+{
+text-align:center;
+}
 </style>
 </head>
 <body>
@@ -110,7 +114,19 @@ if(!$session->isAdmin()) {
 	echo '<div align="center">';
 	echo '<h3>Courses registered for</h3>';
 	echo '</div>';
-	$database->query(
+	$q = "SELECT * FROM signups INNER JOIN courses ON signups.cid = courses.cid WHERE username='".$session->username."'";
+	$results = $database->query($q);
+	echo '<table width="40%" align="center">';
+	echo '<tr><th><b>Title</b></th><th><b>Days</b></th><th><b>Time</b></th><th><b>Teacher</b></th><th><b>Drop</b></th></tr>';
+	while($info = mysql_fetch_array($results)) {
+		$title = $info['title'];
+		$days = $info['days'];
+		$time = $info['time'];
+		$teacher = $info['teacher'];
+		$cid = $info['cid'];
+		echo "<tr><td>$title</td><td>$days</td><td>$time</td><td>$teacher</td><td><a href=\"drop.php?cid=$cid\">X</a></td></tr>";
+	}
+	echo "</table>";
 }
 /**
  * Just a little page footer, tells how many registered members

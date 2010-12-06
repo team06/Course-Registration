@@ -84,28 +84,20 @@ echo '<div align="center">';
 $session->displayHeader();
 echo '</div>';
 echo "<h3 align=\"center\">$title</h3>";
-echo "<table class=\"left\"><tr><td>$number-$section</td></tr>";
-echo "<tr><td>$days $time</td></tr>";
-if(isset($lab)) echo "<tr><td>$l_days $l_time</td></tr>";
-echo "<tr><td>$teacher</td></tr>";
-echo "<tr><td>$credits</td></tr></table>";
-echo "<br><br><br><br><br><br><br>";
+echo "<table class=\"left\"><tr><td><b>Course Number:</b></td><td>$number-$section</td></tr>";
+echo "<tr><td><b>Class Time:</b></td><td>$days $time</td></tr>";
+if(isset($lab)) echo "<tr><td><b>Lab Time:</b></td><td>$l_days $l_time</td></tr>";
+echo "<tr><td><b>Instructor:</b></td><td>$teacher</td></tr>";
+echo "<tr><td><b>Credits:</b></td><td>$credits</td></tr></table>";
+echo "<br><br><br><br><br>";
+echo '<div align="center">';
+echo '<b>Course Description</b>';
+echo '</div>';
 echo "<p class=\"left\">$desc</p>";
 
-$q = "SELECT * FROM videos WHERE cid=$cid";
-
 if($session->isAdmin()) {
-	$q = "SELECT * FROM signups NATURAL JOIN users WHERE cid=$cid";	
-	$result = $database->query($q);
 	echo '<div align="center">';
-	echo '<h3>Students Signed up</h3>';
-	echo '</div>';
-	echo '<table align="center">';
-	echo '<tr><th>User</th></tr>';
-	while($user = mysql_fetch_array($result)) {
-		echo '<tr><td>'.$user['username'].'</td></tr>';
-	}
-	echo '</table>';
+	echo '<a href="print.php?cid='.$_GET['cid'].'" target="_blank">View Roster</a>';
 }
 ?>
 </body>

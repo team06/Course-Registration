@@ -175,7 +175,14 @@ for($i = 0;$i <= 5;$i++){
 </tr>
 </table>
 <br/>
-<table class="courses3" align="center" width="%40" cellspacing="5">
+<table class="courses1" align="center" width="%20" cellspacing="5">
+<tr><td><?echo $form->error("max");?>Course Max:</td><td><input type="text" size="2" name="max" value="<?echo $form->value("max");?>"/></td></tr>
+<tr></tr>
+<tr></tr>
+<tr></tr>
+<tr></tr>
+<tr></tr>
+<tr></tr>
 <!--<tr><td>Video:</td><td><input type="file" name="video"/></td></tr>
 <tr><td>Syllabus:</td><td><input type="file" name="syllabus"/></td></tr>
 <tr></tr>
