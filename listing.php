@@ -15,8 +15,8 @@ if($session->logged_in) {
 	echo "<div align=\"center\">";
 	echo "<h1>Honors Academy Course Registration</h1>";
 	echo "Welcome <b>$session->username</b>, you are logged in. <br><br>"
-		."<div align=\"center\">[<a href=\"login.php\">Main</a>] &nbsp;&nbsp;";
-	//    ."[<a href=\"useredit.php\">Edit Account</a>] &nbsp;&nbsp;";
+		."<div align=\"center\">[<a href=\"login.php\">Main</a>] &nbsp;&nbsp;"
+	    ."[<a href=\"chat/\" onclick=\"openWindow(this.href);this.blur();return false;\">Chat</a>] &nbsp;&nbsp;";
 	if($session->isAdmin()){
 		echo "[<a href=\"admin/\">Admin Center</a>] &nbsp;&nbsp;";
 	}
@@ -87,6 +87,21 @@ function displaySelect() {
 <html>
 <title>Honors Academy</title>
 <head>
+<script type="text/javascript">
+// <![CDATA[
+	function openWindow(url,width,height,options,name) {
+		width = width ? width : 800;
+		height = height ? height : 600;
+		options = options ? options : 'resizable=yes';
+		name = name ? name : 'openWindow';
+		window.open(
+			url,
+			name,
+			'screenX='+(screen.width-width)/2+',screenY='+(screen.height-height)/2+',width='+width+',height='+height+','+options
+		)
+	}
+// ]]>
+</script>
 <style type="text/css">
 table, td, th
 {

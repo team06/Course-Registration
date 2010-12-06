@@ -17,6 +17,21 @@ include("include/session.php");
 <html>
 <title>Honors Academy</title>
 <head>
+<script type="text/javascript">
+// <![CDATA[
+	function openWindow(url,width,height,options,name) {
+		width = width ? width : 800;
+		height = height ? height : 600;
+		options = options ? options : 'resizable=yes';
+		name = name ? name : 'openWindow';
+		window.open(
+			url,
+			name,
+			'screenX='+(screen.width-width)/2+',screenY='+(screen.height-height)/2+',width='+width+',height='+height+','+options
+		)
+	}
+// ]]>
+</script>
 <style type="text/css">
 .left
 {
@@ -91,6 +106,12 @@ if($form->num_errors > 0){
 </form>
 <?
 }
+if(!$session->isAdmin()) {
+	echo '<div align="center">';
+	echo '<h3>Courses registered for</h3>';
+	echo '</div>';
+	$database->query(
+}
 /**
  * Just a little page footer, tells how many registered members
  * there are, how many users currently logged in and viewing site,
@@ -102,7 +123,7 @@ echo "<b>Member Total:</b> ".$database->getNumMembers()."<br>";
 echo "There are $database->num_active_users registered members and ";
 echo "$database->num_active_guests guests viewing the site.<br><br></div>";
 
-include("include/view_active.php");
+//include("include/view_active.php");
 
 ?>
 </div>
