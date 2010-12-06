@@ -13,7 +13,8 @@
  * Written by: Jpmaster77 a.k.a. The Grandmaster of C++ (GMC)
  * Last Updated: August 19, 2004
  */
- 
+include("database.php");
+
 class Mailer
 {
    /**
@@ -44,20 +45,21 @@ class Mailer
     * to the user's email address that was specified at
     * sign-up.
     */
-   function sendNewPass($user, $email, $pass){
-      $from = "From: ".EMAIL_FROM_NAME." <".EMAIL_FROM_ADDR.">";
+   function sendNewPass($name, $user, $email, $pass){
+	   global $database;
+	   $from = "From: ".EMAIL_FROM_NAME." <".EMAIL_FROM_ADDR.">";
+	   $result = mysql_fetch_array($database->query("SELECT * FROM dates"));
+	   $start = date('l \t\h\e jS \of F, Y \a\t h:i A', $result['start_time']);
+	   $end = date('l \t\h\e jS \of F, Y \a\t h:i A', $result['end_time']);
       $subject = "Honors Academy Course Registration - Your new password";
-      $body = $user.",\n\n"
-             ."We've generated a new password for you at your "
-             ."request, you can use this new password with your "
-			 ."username to log in to the Honors Academy Course"
+      $body = $name.",\n\n"
+             ."We've generated a new password for you. "
+             ."You can use this new password with your "
+			 ."username to log in to the Honors Academy Course "
 			 ."Registration System"."\n\n"
              ."Username: ".$user."\n"
-             ."New Password: ".$pass."\n\n"
-             ."It is recommended that you change your password "
-             ."to something that is easier to remember, which "
-             ."can be done by going to the My Account page "
-             ."after signing in.\n\n"
+			 ."New Password: ".$pass."\n\n"
+			 ."Registration starts $start and ends $end\n\n"
              ."- Honors Academy";
              
       return mail($email,$subject,$body,$from);

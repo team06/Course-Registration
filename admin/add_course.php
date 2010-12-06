@@ -51,9 +51,9 @@ if($form->num_errors > 0) {
 		."!*** Error with request, please fix</font><br><br></div>";
 }
 ?>
-<form name="myform" action="adminprocess.php" method="POST" enctype="multipart/form-data "onsubmit="return help()">
+<form name="myform" action="adminprocess.php" method="POST" enctype="multipart/form-data" onsubmit="return help()">
 <table class="courses1" align="center" width="50%" cellspacing="5">
-<tr><td><? echo $form->error("cname");?>Course Title:</td><td><input type="text" size="30" name="cname" value="<?echo $form->value('cname');?>"/></td></tr>
+<tr><td><input type="hidden" name="subaddcourse" value="1"/><? echo $form->error("cname");?>Course Title:</td><td><input type="text" size="30" name="cname" value="<?echo $form->value('cname');?>"/></td></tr>
 <tr><td></td><td></td></tr>
 <tr><td><? echo $form->error("cnumber");?>Course Number:</td><td><input type="text" size="7" name="cnumber" value="<?echo $form->value('cnumber');?>"/>&nbsp;&nbsp;<font size=1>i.e. HIST101</font><td></tr>
 <tr><td><? echo $form->error("csection");?>Section Number:<br><font size=1></font></td><td><input type="text" size="2" name="csection" value="<?echo $form->value('csection');?>"/></td></tr>
@@ -176,10 +176,11 @@ for($i = 0;$i <= 5;$i++){
 </table>
 <br/>
 <table class="courses3" align="center" width="%40" cellspacing="5">
-<tr><td>Video:</td><td><input type="file" name="video"/></td></tr>
+<!--<tr><td>Video:</td><td><input type="file" name="video"/></td></tr>
+<tr><td>Syllabus:</td><td><input type="file" name="syllabus"/></td></tr>
 <tr></tr>
-<input type="hidden" name="subaddcourse" value="1"/>
-<tr><td colspan=2><hr></td></tr>
+
+<tr><td colspan=2><hr></td></tr>-->
 <tr><td colspan=2><div align="center"><input type="submit" value="Add Course"/></div></td></tr>
 </table>
 </form>

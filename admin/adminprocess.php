@@ -49,12 +49,67 @@ class AdminProcess
 		  $this->addUser();
 	  }
 	  else if(isset($_POST['subaddcourse'])) {
-		$this->addCourse();
+		  $this->addCourse();
+	  }
+	  else if(isset($_POST['subdate'])) {
+		  $this->setDate();
+	  }
+	  else if(isset($_POST['subsendout'])) {
+		  $this->sendOut();
 	  }
       /* Should not get here, redirect to home page */
       else{
          header("Location: ../login.php");
       }
+   }
+
+   function sendOut() {
+	   global $database, $mailer, $session, $form;
+	   $result = $database->query("SELECT * FROM users WHERE userlevel=1");
+	   while($user = mysql_fetch_array($result)) {
+		   $name = $user['first_name']." ".$user['last_name'];
+		   $uname = $user['username'];
+		   $email = $user['email'];
+		   /* Generate new password */
+		   $newpass = $session->generateRandStr(8);
+
+		   /* Attempt to send the email with new password */
+		   if($mailer->sendNewPass($name, $uname,$email,$newpass)){
+			   /* Email sent, update database */
+			   $database->updateUserField($uname, "password", md5($newpass));
+		   }
+	   }
+	   echo "Sent out emails";
+	   header("Refresh: 4; URL=index.php");
+   }
+
+   function setDate() {
+	   global $session, $database, $form;
+	   $s_hour = $_POST['s_hour'];
+	   $s_day = $_POST['s_day'];
+	   $s_month = $_POST['s_month'];
+	   $s_year = $_POST['s_year'];
+	   $s_time = mktime($s_hour, 0, 0, $s_month, $s_day, $s_year);
+	   $e_hour = $_POST['e_hour'];
+	   $e_day = $_POST['e_day'];
+	   $e_month = $_POST['e_month'];
+	   $e_year = $_POST['e_year'];
+	   $e_time = mktime($e_hour, 0, 0, $e_month, $e_day, $e_year);
+	   if($e_time == $s_time) {
+		   $form->setError("date", "The end time and the start time are the same.");
+	   }
+	   else if($e_time < $s_time) {
+		   $form->setError("date", "The end time is before the start time.");
+	   }
+	   if($form->num_errors > 0){
+		   $_SESSION['value_array'] = $_POST;
+		   $_SESSION['error_array'] = $form->getErrorArray();
+		   header("Location: index.php");
+	   }
+	   $database->query("DELETE FROM dates");
+	   $database->query("INSERT INTO dates VALUES ($s_time, $e_time)");
+	   echo '<h1>Date Successfully Set</h1>';
+	   header("Refresh: 4;URL=index.php");
    }
 
    function addCourse() {
@@ -97,6 +152,7 @@ class AdminProcess
 			$form->setError("cnumber", "*");
 	   }
 	   $days = "";
+	   $lab = "";
 	   if(isset($_POST['cm'])) {
 		   $days = $days.$_POST['cm'];
 	   }
@@ -112,12 +168,29 @@ class AdminProcess
 	   if(isset($_POST['cf'])) {
 		   $days = $days.$_POST['cf'];
 	   }
+	   if(isset($_POST['lm'])) {
+		   $lab = $lab.$_POST['lm'];
+	   }
+	   if(isset($_POST['lt'])) {
+		   $lab = $lab.$_POST['lt'];
+	   }
+	   if(isset($_POST['lw'])) {
+		   $lab = $lab.$_POST['lw'];
+	   }
+	   if(isset($_POST['lr'])) {
+		   $lab = $lab.$_POST['lr'];
+	   }
+	   if(isset($_POST['lf'])) {
+		   $lab = $lab.$_POST['lf'];
+	   }
+	   
 	   $semester = $_POST['semester'];
 	   $year = $_POST['year'];
 	   $number = $_POST['cnumber'];
 	   $section = $_POST['csection'];
 	   $name = $_POST['cname'];
 	   $time = $_POST['s_hour'].":".$_POST['s_min']."-".$_POST['e_hour'].":".$_POST['e_min'];
+	   $l_time = $_POST['ls_hour'].":".$_POST['ls_min']."-".$_POST['le_hour'].":".$_POST['le_min'];
 	   $credit = $_POST['credits'];
 	   $course = Array();
 	   $course['name'] = $name;
@@ -130,10 +203,23 @@ class AdminProcess
 	   $course['semester'] = $semester;
 	   $course['year'] = $year;
 	   $course['desc'] = $_POST['desc'];
-	   $teacher = $_POST['cteacher'];
-	   if($database->confirmCourse($teacher,$semester,$year,$time,$days) == 1) {
-		   $form->setError("listing", "$teacher is already teaching a class $semester semester $year at $time on $days");
+	   if($lab != "N") {
+		   $course['lab'] = $lab;
+		   $course['l_time'] = $l_time;
 	   }
+	   print_r($_FILES);
+	   print_r($_POST);
+	   if(isset($_FILES['video']['tmp_name'])) {
+		   $target_path = "videos/";
+		   $allowed = Array("wmv", "avi", "mkv", "mov");
+		   if(in_array(end(explode(".",strtolower($_FILES['video']['name']))), $allowed)) {
+			   $course['video'] = $target_path . basename($_FILES['video']['name']);
+		   }
+	   }
+	   $teacher = $_POST['cteacher'];
+	   /*if($database->confirmCourse($teacher,$semester,$year,$time,$days) == 1) {
+		   $form->setError("listing", "$teacher is already teaching a class $semester semester $year at $time on $days");
+	   }*/
 	   if($form->num_errors > 0){
 		   $_SESSION['value_array'] = $_POST;
 		   $_SESSION['error_array'] = $form->getErrorArray();
@@ -141,7 +227,7 @@ class AdminProcess
 	   } else {
 		   $database->addCourse($course);
 		   echo "<h1>Course Added</h1>";
-		   echo "You will be automatically redirected back to the Admin Center.<br>If does not happen within 5 seconds please click <a href=\"tools.php\">here</a>";
+		   echo "You will be automatically redirected back to the Admin Center.<br>If does not happen within 5 seconds please click <a href=\"index.php?d=mc\">here</a>";
 		   header("Refresh: 4; URL=index.php?d=mc");
 	   }
 
@@ -152,11 +238,19 @@ class AdminProcess
 	   $uname = $_POST['uname'];
 	   $pass = $_POST['pass'];
 	   $email = $_POST['email'];
+	   $first = $_POST['first'];
+	   $last = $_POST['last'];
+	   $status = $_POST['status'];
+	   if($pass == "") {
+		   $pass = $session->generateRandStr(9);
+	   }
 	   if($session->register($uname, $pass, $email) == 1) {
 		   $_SESSION['value_array'] = $_POST;
 		   $_SESSION['error_array'] = $form->getErrorArray();
 		   header("Location: index.php?d=au");
 	   } else {
+		   $q = "UPDATE users SET first_name='$first', last_name='$last', honors_status='$status' WHERE username='$uname'";
+		   $database->query($q);
 		   header("Location: index.php?d=mu");
 	   }
    }

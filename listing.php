@@ -31,16 +31,17 @@ if($session->logged_in) {
 }
 
 function displayCourses() {
-	global $database;
+	global $database, $session;
 	if($_POST != Array()) {
 		echo "<div align=\"center\"><a href=\"listing.php\">Go back</a></div>";
 		echo "<table align=\"center\" cellspacing=\"5\" cellpadding=\"5\" border=\"1\">";
-		echo "<tr><th>Course Number</th><th>Section</th><th>Title</th><th>Credits</th><th>Days</th><th>Time</th><th>Instructor</th></tr>";
+		echo "<tr><th>Course Number</th><th>Section</th><th>Title</th><th>Credits</th><th>Days</th><th>Time</th><th>Instructor</th><th>Available</th><th>Max</th></tr>";
 		$y = $_POST['year'];
 		$s = $_POST['semester'];
 		$q = "SELECT * FROM years NATURAL JOIN courses WHERE year = '$y' AND semester = '$s'";
 		$result = $database->query($q);
 		while($course = mysql_fetch_array($result)) {
+			$cid = $course['cid'];
 			$title = $course['title'];
 			$number = $course['number'];
 			$section = $course['section'];
@@ -48,7 +49,21 @@ function displayCourses() {
 			$days = $course['days'];
 			$credits = $course['credits'];
 			$teacher = $course['teacher'];
-			echo "<tr><td>$number</td><td>$section</td><td>$title</td><td>$credits</td><td>$days</td><td>$time</td><td>$teacher</td></tr>";
+			$seats = mysql_fetch_array($database->query("SELECT * FROM seats WHERE cid=$cid"));
+			$max = $seats['max'];
+			$avail = $seats['available'];
+			echo "<tr><td><a href=\"course.php?cid=$cid\">$number</a></td><td>$section</td><td>$title</td><td>$credits</td><td>$days</td><td>$time</td><td>$teacher</td><td>$avail</td><td>$max</td>";
+			if(!$session->isAdmin()) {
+				echo '<form action="signup.php" method="POST"><td><input type="hidden" name="cid" value="'.$cid.'"/><input type="submit" value="Sign-up"/></td></form>';
+			}
+			echo "</tr>";
+			$lab = $database->query("SELECT * FROM lab WHERE cid=$cid");
+			if(mysql_num_rows($lab) > 0) {
+				$lab = mysql_fetch_array($lab);
+				$l_day = $lab['lab'];
+				$l_time = $lab['time'];
+				echo "<tr><td>$number(Lab)</td><td>$section</td><td>$title</td><td>0</td><td>$l_day</td><td>$l_time</td><td>$teacher</td><td>$avail</td><td>$max</td></tr>";
+			}
 		}
 		echo "</table>";
 	}
@@ -107,8 +122,7 @@ height:10%;
 </style>
 </head>
 <body>
-<div class="left_side"></div>
-<div class="right_side"></div>
+<? echo $form->error("signup");?>
 <form action="listing.php" method="POST">
 <? displaySelect(); ?>
 </form>
@@ -119,6 +133,5 @@ height:10%;
 }
 ?>
 <? displayCourses(); ?>
-<div class="bottom"></div>
 </body>
 </html>

@@ -27,6 +27,12 @@ $time = $course['time'];
 $teacher = $course['teacher'];
 $credits = $course['credits'];
 $desc = $course['description'];
+$result = $database->query("SELECT * FROM lab WHERE cid = $cid");
+if(mysql_num_rows($result) > 0) {
+	$lab = mysql_fetch_array($result);
+	$l_days = $lab['lab'];
+	$l_time = $lab['time'];
+}
 ?>
 <html>
 <title>
@@ -36,12 +42,12 @@ $desc = $course['description'];
 <style type="text/css">
 .left
 {
-position:absolute;
+position:relative;
 left:25%;
 }
 .left_side
 {
-position:absolute;
+position:relative;
 top:0px;
 left:0px;
 background-color:#0033CC;
@@ -50,7 +56,7 @@ height:100%;
 }
 .right_side
 {
-position:absolute;
+position:relative;
 top:0px;
 right:0px;
 background-color:#0033CC;
@@ -59,7 +65,7 @@ height:100%;
 }
 .bottom
 {
-position:absolute;
+position:relative;
 bottom:0px;
 background-color:#0033CC;
 width:90%;
@@ -74,21 +80,33 @@ text-align:center;
 </head>
 <body>
 <?
-
-echo "<div class=\"right_side\"></div>";
-echo "<div class=\"left_side\"></div>";
+echo '<div align="center">';
+$session->displayHeader();
+echo '</div>';
 echo "<h3 align=\"center\">$title</h3>";
 echo "<table class=\"left\"><tr><td>$number-$section</td></tr>";
 echo "<tr><td>$days $time</td></tr>";
+if(isset($lab)) echo "<tr><td>$l_days $l_time</td></tr>";
 echo "<tr><td>$teacher</td></tr>";
 echo "<tr><td>$credits</td></tr></table>";
 echo "<br><br><br><br><br><br><br>";
 echo "<p class=\"left\">$desc</p>";
-$q = "SELECT * FROM lab WHERE cid=$cid";
 
 $q = "SELECT * FROM videos WHERE cid=$cid";
 
-echo "<div class=\"bottom\"></div>";
+if($session->isAdmin()) {
+	$q = "SELECT * FROM signups NATURAL JOIN users WHERE cid=$cid";	
+	$result = $database->query($q);
+	echo '<div align="center">';
+	echo '<h3>Students Signed up</h3>';
+	echo '</div>';
+	echo '<table align="center">';
+	echo '<tr><th>User</th></tr>';
+	while($user = mysql_fetch_array($result)) {
+		echo '<tr><td>'.$user['username'].'</td></tr>';
+	}
+	echo '</table>';
+}
 ?>
 </body>
 </html>

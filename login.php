@@ -52,8 +52,6 @@ height:10%;
 </style>
 </head>
 <body>
-<div class="left_side"></div>
-<div class="right_side"></div>
 
 <div align="center">
 
@@ -74,6 +72,9 @@ if(!$session->displayHeader()) {
  */
 if($form->num_errors > 0){
    echo "<font size=\"2\" color=\"#ff0000\">".$form->num_errors." error(s) found</font>";
+   echo '<br/><font size="2" color="#FF0000">';
+   echo $form->error("time");
+   echo '</font>';
 }
 ?>
 <form action="process.php" method="POST">
@@ -105,6 +106,5 @@ include("include/view_active.php");
 
 ?>
 </div>
-<div class="bottom"></div>
 </body>
 </html>

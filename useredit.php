@@ -94,9 +94,26 @@ if($form->value("email") == ""){
 </tr>
 <tr><td colspan="2" align="right">
 <input type="hidden" name="subedit" value="1">
+<input type="hidden" name="uname" value="<?echo $_GET['user'];?>"/>
 <input type="submit" value="Edit Account"></td></tr>
 <tr><td colspan="2" align="left"></td></tr>
 </table>
+</form>
+<form action="process.php" method="POST">
+<input type="hidden" name="subpromote" value="1"/>
+<input type="hidden" name="uname" value="<?echo $_GET['user'];?>"/>
+<input type="submit" value="Make Admin"/>
+</form>
+</form>
+<form action="process.php" method="POST">
+<input type="hidden" name="subdemote" value="1"/>
+<input type="hidden" name="uname" value="<?echo $_GET['user'];?>"/>
+<input type="submit" value="Make User"/>
+</form>
+<form action="process.php" method="POST">
+<input type="hidden" name="subemail" value="1"/>
+<input type="hidden" name="uname" value="<?echo $_GET['user'];?>"/>
+<input type="submit" value="Send"/>
 </form>
 
 <?

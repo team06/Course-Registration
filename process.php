@@ -29,12 +29,17 @@ class Process
       else if(isset($_POST['subforgot'])){
          $this->procForgotPass();
       }
-      /* User submitted edit account form */
-      else if(isset($_POST['subedit'])){
-         $this->procEditAccount();
-      }
 	  else if(isset($_POST['subisadmin'])) {
 		  $this->procEditAccountAdmin();
+	  }
+	  else if(isset($_POST['subpromote'])) {
+		  $this->procPromote();
+	  }
+	  else if(isset($_POST['subdemote'])) {
+		  $this->procDemote();
+	  }
+	  else if(isset($_POST['subemail'])) {
+		  $this->procSendOutPassword();
 	  }
       /**
        * The only other reason user should be directed here
@@ -52,6 +57,45 @@ class Process
           header("Location: login.php");
        }
    }
+
+   function procSendOutPassword() {
+	   global $session, $mailer, $database;
+	   $uname = $_POST['uname'];
+	   $result = $database->query("SELECT * FROM users WHERE username='$uname'");
+	   $user = mysql_fetch_array($result);
+	   $email = $user['email'];
+	   $first = $user['first_name'];
+	   $last = $user['last_name'];
+	   $newpass = $session->generateRandStr(8);
+
+	   $name = $first." ".$last;
+	   if($mailer->sendNewPass($name, $uname, $email, $newpass)) {
+		   $database->updateUserField($uname, "password", md5($newpass));
+	   }
+	   echo "<h1>Sent e-mail to $first $last</h1>";
+	   header("Refresh: 4; URL=admin/index.php?d=mu");
+   }
+
+   function procPromote() {
+	   global $database;
+	   $uname = $_POST['uname'];
+	   $database->query("UPDATE users SET userlevel=9 WHERE username='$uname'");
+	   header("Location: admin/index.php?d=mu");
+   }
+
+   function procDemote() {
+	   global $database, $form;
+	   $uname = $_POST['uname'];
+	   $result = $database->query("SELECT * FROM users where userlevel=9");
+	   if($uname == "admin") {
+		   $form->setError("promote", "User admin cannot be changed to User level");
+	   }
+	   else {
+		   $database->query("UPDATE users SET userlevel=1 WHERE username='$uname'");
+	   }
+	   header("Location: admin/index.php?d=mu");
+   }
+
 
    /**
     * procLogin - Processes the user submitted login form, if errors
@@ -197,21 +241,29 @@ class Process
    }
    
    function procEditAccountAdmin(){
-      global $session, $form;
+      global $session, $form, $database;
       /* Account edit attempt */
-      $retval = $session->editAccount($_POST['newpass'], $_POST['newpass'], $_POST['email']);
+	  $subnewpass = $_POST['newpass'];
+	  $subnewpass = stripslashes($subnewpass);
+	  if(strlen($subnewpass) < 4){
+		  $form->setError("newpass", "* New Password too short");
+	  }
+	  /* Check if password is not alphanumeric */
+	  else if(!eregi("^([0-9a-z])+$", ($subnewpass = trim($subnewpass)))){
+		  $form->setError("newpass", "* New Password not alphanumeric");
+	  }
+	  if($form->num_errors > 0) {
+		  $_SESSION['value_array'] = $_POST;
+		  $_SESSION['error_array'] = $form->getErrorArray();
+		  header("Location: useredit.php?user=".$_POST['uname']);
+	  } else {
 
-      /* Account edit successful */
-      if($retval){
-         $_SESSION['useredit'] = true;
-         header("Location: ".$session->referrer);
-      }
-      /* Error found with form */
-      else{
-         $_SESSION['value_array'] = $_POST;
-         $_SESSION['error_array'] = $form->getErrorArray();
-         header("Location: ".$session->referrer);
-      }
+		  $result = $database->updateUserField($_POST['uname'],"password",md5($subnewpass));
+		  if($result) {
+			  $_SESSION['useredit'] = true;
+			  header("Location: admin/index.php?d=mu");
+		  }
+	  }
    }
 };
 
