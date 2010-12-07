@@ -1,0 +1,11 @@
+--Installing
+changes values in include/constants.php and chat/lib/config.php
+database table name
+database user name
+database password
+
+default login is
+user: admin
+password: admin
+
+Change the password after first login.

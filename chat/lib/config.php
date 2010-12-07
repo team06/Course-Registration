@@ -1,4 +1,5 @@
 <?php
+include("../../include/constants.php");
 /*
  * @package AJAX_Chat
  * @author Sebastian Tschan
@@ -150,7 +151,7 @@ $config['requestMessagesPriorChannelEnterList'] = null;
 // Max time difference in hours for messages to display on each request:
 $config['requestMessagesTimeDiff'] = 24;
 // Max number of messages to display on each request:
-$config['requestMessagesLimit'] = 10;
+$config['requestMessagesLimit'] = 500;
 
 // Max users in chat (does not affect moderators or admins):
 $config['maxUsersLoggedIn'] = 300;

@@ -36,12 +36,19 @@ else {
 	$result = $database->query($q);
 	if(mysql_affected_rows() == 1) {
 		$database->query("INSERT INTO signups VALUES($cid,'$uname',$time)");
+		echo '<div align="center">';
+		echo '<h1>Registration for course successful</h1>';
+		echo '<h3>Please check back in 2 hours to sign up for your next course.';
+		echo ' You will be redirected back to the course listings.</h3>';
+		echo '</div>';
+		header("Refresh: 4; URL=listing.php");
 	}
-	echo '<div align="center">';
-	echo '<h1>Registration for course successful</h1>';
-	echo '<h3>Please check back in 2 hours to sign up for your next course.';
-	echo ' You will be redirected back to the course listings.</h3>';
-	echo '</div>';
-	header("Refresh: 4; URL=listing.php");
+	else
+	{
+		$form->setError("signup", "* Class is full.");
+		$_SESSION['value_array'] = $_POST;
+		$_SESSION['error_array'] = $form->getErrorArray();
+		header("Location: listing.php");
+	}
 }
 ?>

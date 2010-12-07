@@ -110,7 +110,7 @@ if($form->num_errors > 0){
 </form>
 <?
 }
-if(!$session->isAdmin()) {
+if(!$session->isAdmin() && $session->logged_in) {
 	echo '<div align="center">';
 	echo '<h3>Courses registered for</h3>';
 	echo '</div>';
@@ -124,7 +124,7 @@ if(!$session->isAdmin()) {
 		$time = $info['time'];
 		$teacher = $info['teacher'];
 		$cid = $info['cid'];
-		echo "<tr><td>$title</td><td>$days</td><td>$time</td><td>$teacher</td><td><a href=\"drop.php?cid=$cid\">X</a></td></tr>";
+		echo "<tr><td>$title</td><td>$days</td><td>$time</td><td>$teacher</td><td><a onclick=\"return confirm('Are you sure you want to drop this course?');\" href=\"drop.php?cid=$cid\">X</a></td></tr>";
 	}
 	echo "</table>";
 }

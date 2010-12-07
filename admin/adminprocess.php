@@ -197,8 +197,19 @@ class AdminProcess
 	   $number = $_POST['cnumber'];
 	   $section = $_POST['csection'];
 	   $name = $_POST['cname'];
-	   $time = $_POST['s_hour'].":".$_POST['s_min']."-".$_POST['e_hour'].":".$_POST['e_min'];
-	   $l_time = $_POST['ls_hour'].":".$_POST['ls_min']."-".$_POST['le_hour'].":".$_POST['le_min'];
+	   $time = (($_POST['s_hour'] > 12)?$_POST['s_hour']-12:$_POST['s_hour'])
+		   .":"
+		   .$_POST['s_min']
+		   ."-"
+		   .(($_POST['e_hour'] > 12)?$_POST['e_hour']-12:$_POST['e_hour'])
+		   .":".$_POST['e_min'];
+	   $l_time = (($_POST['ls_hour'] > 12)?$_POST['ls_hour']-12:$_POST['ls_hour'])
+		   .":"
+		   .$_POST['ls_min']
+		   ."-"
+		   .(($_POST['le_hour'] > 12)?$_POST['le_hour']-12:$_POST['le_hour'])
+		   .":"
+		   .$_POST['le_min'];
 	   $credit = $_POST['credits'];
 	   $course = Array();
 	   $course['name'] = $name;

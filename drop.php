@@ -3,7 +3,7 @@ include("include/session.php");
 
 $cid = $_GET['cid'];
 
-$q = "DELETE FROM signups WHERE username='".$session->username."'";
+$q = "DELETE FROM signups WHERE username='".$session->username."' AND cid=$cid";
 $database->query($q);
 $q = "UPDATE seats SET available=available+1 WHERE cid=$cid";
 $database->query($q);

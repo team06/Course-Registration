@@ -34,7 +34,7 @@ function displayCourses() {
 	global $database, $session;
 	if($_POST != Array()) {
 		echo "<div align=\"center\"><a href=\"listing.php\">Go back</a></div>";
-		echo "<table align=\"center\" cellspacing=\"5\" cellpadding=\"5\" border=\"1\">";
+		echo "<table align=\"center\" cellpadding=\"5\" border=\"1\">";
 		echo "<tr><th>Course Number</th><th>Section</th><th>Title</th><th>Credits</th><th>Days</th><th>Time</th><th>Instructor</th><th>Available</th><th>Max</th></tr>";
 		$y = $_POST['year'];
 		$s = $_POST['semester'];
